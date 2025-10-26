@@ -33,8 +33,8 @@ Constraints:
 import java.util.Deque;
 import java.util.ArrayDeque;
 
-public class max_sliding_window {
-    static int[] maxSlidingWindow(int[] nums, int k) {
+public class maxSlidingWindow {
+    static int[] maxWindows(int[] nums, int k) {
         if (nums == null || nums.length == 0 || k < 1 || k > nums.length) {
             return new int[] {};
         }
@@ -62,9 +62,10 @@ public class max_sliding_window {
     public static void main(String[] args) {
         int[] nums = new int[] {1,3,-1,-3,-2,-4,5,3,-4,-5,-3,-1,-2,2,6,-1,-3};
         int k = 3;
-        int[] ans = maxSlidingWindow(nums, k);
+        int[] ans = maxWindows(nums, k);
         for (int x : ans) {
             System.out.print(x + " ");
         }
     }
 }
+
