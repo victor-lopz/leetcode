@@ -1,18 +1,34 @@
 def twosum(nums: list[int], target: int) -> tuple[int, int]:
     no_solution = (-1,-1)
-    index_of = {}
+    index_map = {}
     for index, num in enumerate(nums):
-        looking_for = target - num
-        if looking_for in index_of:
-            return (index_of[looking_for], index)
-        index_of[num] = index
+        wanted_number = target - num
+        if wanted_number in index_map:
+            return (index_map[wanted_number], index)
+        index_map[num] = index
     return no_solution
 
-def test():
+def test1():
     nums = [-5,-1,0,0,2,2,3]
     target = -2
     answer = twosum(nums, target)
-    print(f"{answer = }")
-    expected = [0,6]
-    
-test()
+    expected = (0, 6)
+    print(f"{answer = }, {expected = }")
+
+def test2_no_answer():
+    nums = [-5,-1,0,0,2,2,3]
+    target = 99
+    answer = twosum(nums, target)
+    expected = (-1, -1)
+    print(f"{answer = }, {expected = }")
+
+def test3_empty():
+    nums = []
+    target = -2
+    answer = twosum(nums, target)
+    expected = (-1, -1)
+    print(f"{answer = }, {expected = }")
+
+test1()
+test2_no_answer()
+test3_empty()
