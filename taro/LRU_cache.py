@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict
 
 class Node:
     def __init__(self, key: int, value: int) -> None:
@@ -10,10 +10,10 @@ class Node:
 class LRUCache:
     def __init__(self, capacity: int) -> None:
         if capacity <= 0:
-            raise ValueError("Input parameter 'capacity' cannot be negative or zero. \
-                    It must be positive.")
+            raise ValueError("Input parameter 'capacity' cannot be negative or zero. "
+                             "It must be a positive integer.")
         self.capacity = capacity
-        self.cache_dict = {}
+        self.cache_dict: Dict[int, Node] = {}
         self.head_node = Node(0,0)
         self.tail_node = Node(0,0)
         self.head_node.next_node = self.tail_node
@@ -45,7 +45,6 @@ class LRUCache:
             self._remove_node(node_to_update)
             self._insert_node_beginning(node_to_update)
             node_to_update.value = value
-            self.cache_dict[key] = node_to_update
             return
         # now if key is not in cache:
         if len(self.cache_dict) == self.capacity:
@@ -53,14 +52,31 @@ class LRUCache:
             self._remove_node(node_to_delete)  # type: ignore
             self.cache_dict.pop(node_to_delete.key)  # type: ignore
         node_to_insert = Node(key, value)
-        self._insert_node_beginning(node_to_insert)
         self.cache_dict[key] = node_to_insert
+        self._insert_node_beginning(node_to_insert)
 
-x = LRUCache(capacity=3)
-max_iter = 10**6
-for i in range(max_iter):
-    x.put(i, i+1)
+def test1():
+    x = LRUCache(capacity=0)
+    max_iter = 10
+    for i in range(max_iter):
+        x.put(i, i)
 
-for i in range(max_iter - 10, max_iter):
-    print(x.get(i))
+    for i in range(max_iter):
+        print(x.get(i))
 
+def test2():
+    x = LRUCache(capacity=2)
+    x.put(1,1)
+    x.put(2,2)
+    print(x.get(1))
+    x.put(3,3)
+    print(x.get(2))
+    x.put(4,4)
+    print(x.get(1))
+    print(x.get(2))
+    print(x.get(3))
+    print(x.get(4))
+
+if __name__ == "__main__":
+    test1()
+    test2()
