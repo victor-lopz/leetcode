@@ -102,6 +102,21 @@ class GroupByTestCase(unittest.TestCase):
     def test_group_by_key_func_value_error(self) -> None:
         array_of_ints = [1, 2, 3]
         self.assertRaises(ValueError, group_by, array_of_ints, str.lower)
+    
+    def test_group_by_with_generator(self) -> None:
+        call_count = 0
+        def number_generator():
+            nonlocal call_count
+            call_count += 1
+            yield 1
+            yield 2
+            yield 1
+            yield 3
+        
+        group_by_parity = group_by(number_generator(), lambda x: x%2)
+        expected = {1: [1, 1, 3], 0: [2]}
+        self.assertEqual(expected, group_by_parity)
+        self.assertEqual(call_count, 1)
 
 class GroupCountTestCase(unittest.TestCase):
     
@@ -133,7 +148,22 @@ class GroupCountTestCase(unittest.TestCase):
     
     def test_group_by_unhashable_key(self) -> None:
         # key_func returns a list (unhashable)
-        self.assertRaises(TypeError, group_by, [1, 2], lambda x: [x])
+        self.assertRaises(TypeError, group_count, [1, 2], lambda x: [x])
+    
+    def test_group_count_with_generator(self) -> None:
+        call_count = 0
+        def number_generator():
+            nonlocal call_count
+            call_count += 1
+            yield 1
+            yield 2
+            yield 1
+            yield 3
+        
+        group_by_parity = group_count(number_generator(), lambda x: x%2)
+        expected = {1: 3, 0: 1}
+        self.assertEqual(expected, group_by_parity)
+        self.assertEqual(call_count, 1)
 
 if __name__ == "__main__":
     unittest.main()
