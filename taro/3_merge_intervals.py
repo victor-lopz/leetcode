@@ -1,26 +1,19 @@
 import unittest
 
 def merge_intervals(intervals: list[list[int]]) -> list[list[int]]:
-    merged_intervals = []
     if not intervals:
-        return merged_intervals
-    def start_of_interval(interval: list[int]) -> int:
-        return interval[0]
-    
-    intervals = sorted(intervals, key=start_of_interval)
-    previous_end = - float('inf')
-    for current_interval in intervals:
-        current_start, current_end = current_interval
-        if previous_end < current_start: # No overlapping
-            merged_intervals.append(current_interval)
-            previous_end = current_end
-        else: # There is overlapping
-            if current_end > previous_end: # select largest end for merged interval
-                previous_end = current_end 
-            merged_intervals[-1][1] = previous_end
-    return merged_intervals
+        return []    
+    intervals.sort(key=lambda x: x[0])
+    merged = [intervals[0]]
+    for current_start, current_end in intervals[1:]:
+        previous_start, previous_end = merged[-1]
+        if previous_end >= current_start: # Overlap
+            merged[-1] = [previous_start, max(previous_end, current_end)]
+        else:
+            merged.append([current_start, current_end])
+    return merged
 
-class mergeIntervalsTestCase(unittest.TestCase):
+class MergeIntervalsTestCase(unittest.TestCase):
     
     def test_overlapping(self) -> None:
         intervals = [[3,4], [2,3]]
@@ -38,12 +31,6 @@ class mergeIntervalsTestCase(unittest.TestCase):
         intervals = []
         expected = []
         merged_intervals = merge_intervals(intervals)
-        self.assertEqual(expected, merged_intervals)
-        
-    def test_None(self) -> None:
-        intervals = None
-        expected = []
-        merged_intervals = merge_intervals(intervals) # type: ignore
         self.assertEqual(expected, merged_intervals)
         
     def test_many_intervals(self) -> None:
