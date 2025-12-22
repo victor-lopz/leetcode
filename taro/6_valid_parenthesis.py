@@ -2,9 +2,7 @@ import unittest
 
 def is_valid(parentheses_string: str) -> bool:
     """
-    Legacy function for backward compatibility with LeetCode interface.
-    
-    For production use, prefer BracketValidator class for better error handling.
+    Checks if a string containing parentheses is valid.
     
     Time complexity: O(n), where n = len(parentheses_string).
     Space complexity: O(n), due to storing open brackets in stack.
