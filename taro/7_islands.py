@@ -1,8 +1,5 @@
 import unittest
 
-class IrregularShapeError(Exception):
-    pass
-
 def count_islands(grid: list[list[int]]) -> int:
     """
     Counts how many islands are on the grid.
@@ -18,11 +15,7 @@ def count_islands(grid: list[list[int]]) -> int:
     if not grid or not grid[0]:
         return 0
     n = len(grid)
-    m = len(grid[0])
-    for i in range(1, n):
-        if m != len(grid[i]):
-            raise IrregularShapeError("All rows of 'grid' must be of the same length.")
-        
+    m = len(grid[0])  
     num_islands = 0
     stack = []
     visited = [[False] * m for i in range(n)]
@@ -122,12 +115,5 @@ class CountIslandsTestCase(unittest.TestCase):
         diag_grid = [[0 if i != j else 1 for j in range(n)] for i in range(n)]
         self.assertEqual(n, count_islands(diag_grid))
     
-    def test_throws_error_irregular_shape(self) -> None:
-        grid = [
-            [1, 1],
-            [0]
-        ]
-        self.assertRaises(IrregularShapeError, count_islands, grid)
-
 if __name__ == "__main__":
     unittest.main()
