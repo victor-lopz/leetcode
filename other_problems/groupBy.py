@@ -6,26 +6,25 @@ import unittest
 T = TypeVar("T")
 K = TypeVar("K", bound=Hashable)
 
-__all__ = ['group_by', 'group_count']
+__all__ = ["group_by", "group_count"]
 
-def group_by(array: Iterable[T], 
-            key_func: Callable[[T], K]
-            ) -> dict[K, list[T]]:
+
+def group_by(array: Iterable[T], key_func: Callable[[T], K]) -> dict[K, list[T]]:
     """
     Groups array elements by the result of key_func.
-    
+
     Args:
         array: Iterator of elements to group. Can be a list, tuple, set, dict...
         key_func: Custom function that outputs the grouping key for each element
-    
+
     Returns:
-        Dictionary mapping each output of key_func to a list of 
+        Dictionary mapping each output of key_func to a list of
         elements that achieve it.
-    
+
     Examples:
         >>> group_by(["a", "A", "b", "A"], str.islower)
         {True: ["a", "b"], False: ["A", "A"]}
-        
+
         >>> group_by(['a', 'A', 'b', 'A', 'B'], str.lower)
         {'a': ['a', 'A', 'A'], 'b': ['b', 'B']}
     """
@@ -42,11 +41,12 @@ def group_by(array: Iterable[T],
         grouped[key].append(element)
     return dict(grouped)
 
-def group_count(array: Iterable[T], 
-               key_func: Callable[[T], K] = lambda x: x
-               ) -> dict[K, int]:
+
+def group_count(
+    array: Iterable[T], key_func: Callable[[T], K] = lambda x: x
+) -> dict[K, int]:
     """
-    Counts the number of unique outputs from key_func. 
+    Counts the number of unique outputs from key_func.
     If key_func is not provided, then counts the number of unique elements.
     Args:
         array: Iterator of elements. Can be a list, tuple, set, dict...
@@ -72,18 +72,18 @@ def group_count(array: Iterable[T],
         grouped[key] += 1
     return dict(grouped)
 
+
 class GroupByTestCase(unittest.TestCase):
-    
     def test_group_by_is_lower(self) -> None:
-        array = ['a', 'a', 'b', 'A', 'A', 'B']
+        array = ["a", "a", "b", "A", "A", "B"]
         is_lower_groups = group_by(array, str.islower)
-        expected = {True: ['a', 'a', 'b'], False: ['A', 'A', 'B']}
+        expected = {True: ["a", "a", "b"], False: ["A", "A", "B"]}
         self.assertEqual(is_lower_groups, expected)
 
     def test_group_by_lower(self) -> None:
-        array = ['a', 'a', 'b', 'A', 'A', 'B']
+        array = ["a", "a", "b", "A", "A", "B"]
         lower_groups = group_by(array, str.lower)
-        expected = {'a': ['a', 'a', 'A', 'A'], 'b': ['b', 'B']}
+        expected = {"a": ["a", "a", "A", "A"], "b": ["b", "B"]}
         self.assertEqual(lower_groups, expected)
 
     def test_group_by_null_array(self) -> None:
@@ -98,13 +98,14 @@ class GroupByTestCase(unittest.TestCase):
     def test_group_by_non_callable(self) -> None:
         array = [3, 2, 1]
         self.assertRaises(TypeError, group_by, array, 2)
-    
+
     def test_group_by_key_func_value_error(self) -> None:
         array_of_ints = [1, 2, 3]
         self.assertRaises(ValueError, group_by, array_of_ints, str.lower)
-    
+
     def test_group_by_with_generator(self) -> None:
         call_count = 0
+
         def number_generator():
             nonlocal call_count
             call_count += 1
@@ -112,14 +113,14 @@ class GroupByTestCase(unittest.TestCase):
             yield 2
             yield 1
             yield 3
-        
-        group_by_parity = group_by(number_generator(), lambda x: x%2)
+
+        group_by_parity = group_by(number_generator(), lambda x: x % 2)
         expected = {1: [1, 1, 3], 0: [2]}
         self.assertEqual(expected, group_by_parity)
         self.assertEqual(call_count, 1)
 
+
 class GroupCountTestCase(unittest.TestCase):
-    
     def test_group_count_ints(self) -> None:
         integer_tuple = (3, 3, 3, 3, 2, 2, 1)
         counts = group_count(integer_tuple)
@@ -131,27 +132,28 @@ class GroupCountTestCase(unittest.TestCase):
         bit_counts = group_count(integer_tuple, int.bit_length)
         expected = {2: 6, 1: 1}
         self.assertEqual(bit_counts, expected)
-    
+
     def test_group_count_null(self) -> None:
         self.assertRaises(TypeError, group_count, None, str.lower)
-        
+
     def test_group_count_non_callable(self) -> None:
         self.assertRaises(TypeError, group_count, [], 2)
-    
+
     def test_group_count_empty_array(self) -> None:
         self.assertEqual({}, group_count([], str.upper))
-    
+
     def test_group_count_several_types(self) -> None:
-        counts = group_count([5, 'a'])
-        expected = {5:1, 'a':1}
+        counts = group_count([5, "a"])
+        expected = {5: 1, "a": 1}
         self.assertEqual(expected, counts)
-    
+
     def test_group_by_unhashable_key(self) -> None:
         # key_func returns a list (unhashable)
         self.assertRaises(TypeError, group_count, [1, 2], lambda x: [x])
-    
+
     def test_group_count_with_generator(self) -> None:
         call_count = 0
+
         def number_generator():
             nonlocal call_count
             call_count += 1
@@ -159,11 +161,12 @@ class GroupCountTestCase(unittest.TestCase):
             yield 2
             yield 1
             yield 3
-        
-        group_by_parity = group_count(number_generator(), lambda x: x%2)
+
+        group_by_parity = group_count(number_generator(), lambda x: x % 2)
         expected = {1: 3, 0: 1}
         self.assertEqual(expected, group_by_parity)
         self.assertEqual(call_count, 1)
+
 
 if __name__ == "__main__":
     unittest.main()
