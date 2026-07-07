@@ -11,7 +11,7 @@ repos:
     rev: v0.15.18
     hooks:
       - id: ruff-check # lint python files
-        args: [ --fix ] # fix linting issues automatically
+        args: [--fix] # fix linting issues automatically
       - id: ruff-format # format python files
 
   - repo: https://github.com/pre-commit/mirrors-prettier
