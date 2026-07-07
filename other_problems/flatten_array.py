@@ -1,5 +1,4 @@
 import unittest
-from typing import Optional, Union, Literal
 
 
 def flatten(nested_list: list[list], max_depth=None) -> tuple[list, int]:
