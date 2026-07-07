@@ -1,11 +1,12 @@
 class treeNode:
     def __init__(self, value=0, left=None, right=None):
         self.value: int = value
-        self.left: treeNode|None = left
-        self.right: treeNode|None = right
+        self.left: treeNode | None = left
+        self.right: treeNode | None = right
+
 
 def are_leaf_similar(tree_a: treeNode, tree_b: treeNode) -> bool:
-       
+
     def get_leaf_sequence(tree: treeNode, leaf_sequence: list[int]) -> None:
         if not tree.left and not tree.right:
             leaf_sequence.append(tree.value)
@@ -14,7 +15,7 @@ def are_leaf_similar(tree_a: treeNode, tree_b: treeNode) -> bool:
             get_leaf_sequence(tree.left, leaf_sequence)
         if tree.right:
             get_leaf_sequence(tree.right, leaf_sequence)
-    
+
     leaf_sequence_a = []
     get_leaf_sequence(tree_a, leaf_sequence_a)
     index = -1
@@ -28,13 +29,13 @@ def are_leaf_similar(tree_a: treeNode, tree_b: treeNode) -> bool:
             index += 1
             return True
         if tree.left and tree.right:
-            return compare(tree.left, leaf_sequence, index) \
-                and compare(tree.right, leaf_sequence, index)
+            return compare(tree.left, leaf_sequence, index) and compare(
+                tree.right, leaf_sequence, index
+            )
         if tree.left:
             return compare(tree.left, leaf_sequence, index)
         if tree.right:
             return compare(tree.right, leaf_sequence, index)
         return True
-    
-    return compare(tree_b, leaf_sequence_a, index)
 
+    return compare(tree_b, leaf_sequence_a, index)
