@@ -33,13 +33,13 @@ Constraints:
 import java.util.Deque;
 import java.util.ArrayDeque;
 
-public class maxSlidingWindow {
+public class MaxSlidingWindow {
     static int[] maxWindows(int[] nums, int k) {
         if (nums == null || nums.length == 0 || k < 1 || k > nums.length) {
             return new int[] {};
         }
         int[] maximums = new int[nums.length-k+1];
-        Deque<Integer> q = new ArrayDeque<Integer>();
+        Deque<Integer> q = new ArrayDeque<>();
         for (int i = 0; i < k; ++i) {
             while (!q.isEmpty() && nums[i] >= nums[q.peekLast()]) {
                 q.removeLast();
