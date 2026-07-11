@@ -1,4 +1,5 @@
 from typing import Optional, Dict
+import unittest
 
 
 class Node:
@@ -60,30 +61,44 @@ class LRUCache:
         self._insert_node_beginning(node_to_insert)
 
 
-def test1():
-    x = LRUCache(capacity=0)
-    max_iter = 10
-    for i in range(max_iter):
-        x.put(i, i)
+class LRUCacheTestCase(unittest.TestCase):
+    def test_capacity_one(self):
+        cache = LRUCache(capacity=1)
+        cache.put(1, 1)
+        self.assertEqual(cache.get(1), 1)
+        cache.put(2, 2)
+        self.assertIsNone(cache.get(1))
+        self.assertEqual(cache.get(2), 2)
 
-    for i in range(max_iter):
-        print(x.get(i))
+    def test_capacity_two(self):
+        cache = LRUCache(capacity=2)
+        cache.put(1, 1)
+        cache.put(2, 2)
+        self.assertEqual(cache.get(1), 1)
+        cache.put(3, 3)
+        self.assertIsNone(cache.get(2))
+        self.assertEqual(cache.get(3), 3)
+        cache.put(4, 4)
+        self.assertIsNone(cache.get(1))
+        self.assertEqual(cache.get(3), 3)
+        self.assertEqual(cache.get(4), 4)
 
+    def test_invalid_capacity(self):
+        with self.assertRaises(ValueError):
+            LRUCache(capacity=0)
+        with self.assertRaises(ValueError):
+            LRUCache(capacity=-1)
 
-def test2():
-    x = LRUCache(capacity=2)
-    x.put(1, 1)
-    x.put(2, 2)
-    print(x.get(1))
-    x.put(3, 3)
-    print(x.get(2))
-    x.put(4, 4)
-    print(x.get(1))
-    print(x.get(2))
-    print(x.get(3))
-    print(x.get(4))
+    def test_update_existing_key(self):
+        cache = LRUCache(capacity=2)
+        cache.put(1, 1)
+        cache.put(2, 2)
+        cache.put(1, 10)
+        self.assertEqual(cache.get(1), 10)
+        cache.put(3, 3)
+        self.assertIsNone(cache.get(2))
+        self.assertEqual(cache.get(1), 10)
 
 
 if __name__ == "__main__":
-    test1()
-    test2()
+    unittest.main()
