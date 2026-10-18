@@ -1,17 +1,19 @@
-from collections import defaultdict
-import heapq
+from collections import Counter
 
 
 def top_k_elements(array: list[int], k: int) -> list[int]:
-    counter = defaultdict(int)
-    for num in array:
-        counter[num] += 1
-    frequencies = [(freq, num) for num, freq in counter.items()]
-    heapq.heapify_max(frequencies)
-    top_k_nums = []
-    for i in range(min(k, len(frequencies))):
-        _top_i_freq, top_i_num = heapq.heappop_max(frequencies)
-        top_k_nums.append(top_i_num)
+    if k <= 0 or not array:
+        return []
+    counter = Counter(array)
+    bucket: list[list[int]] = [[] for _ in range(len(array) + 1)]
+    for num, freq in counter.items():
+        bucket[freq].append(num)
+    top_k_nums: list[int] = []
+    for freq in range(len(array), 0, -1):
+        for num in bucket[freq]:
+            top_k_nums.append(num)
+            if len(top_k_nums) == k:
+                return top_k_nums
     return top_k_nums
 
 
@@ -27,6 +29,9 @@ def main() -> None:
 
     one = top_k_elements([3, 6], k=1)
     assert one == [3] or one == [6]
+
+    result3 = top_k_elements([5, 5, 5, 5, 7, 7, 7, 7, 7, 7, 3, -654, -654], k=3)
+    assert result3 == [7, 5, -654]
 
 
 if __name__ == "__main__":
